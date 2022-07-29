@@ -23,7 +23,7 @@ function IndexComponent() {
       navigation.push("./error");
     }else{
   
-      axios.get("http://localhost:5000/broadcaster/list/",
+      axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/broadcaster/list/`,
       { params: { extensionId }, headers: { Authorization: token }  }).then(
         (response) => {
             let result = response.data;
@@ -53,7 +53,7 @@ function IndexComponent() {
       navigation.push("./error");
     }else{
         console.log("selected name", name)
-        axios.get("http://localhost:5000/broadcaster/url",
+        axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/broadcaster/url`,
       { params: { "name" : name }, headers: { Authorization: token }  }).then(
         (response) => {
             let result = response.data;
