@@ -1,43 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
-import ErrorComponent from "./ErrorComponent"
 import VideoPlayer from './VideoPlayer';
 
 function IndexComponent() {
-  const [error, setError] = useState(false);
   const [broadcasters, setBroadcasters] = useState([]);
   const [showTableData, setShowTableData] = useState(false);
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
-  const [showBroadcasterName, setShowBroadcasterName] = useState("");
   const [url, setUrl] = useState("");
-  
-  const OAuthToken = async() => {
+  const [showBroadcasterName,setShowBroadcasterName] = useState("")
 
-    axios.post("http://localhost:5000/auth/token").then(
-      (response) => {
-          let result = response.data;
-          console.log("result from OAuth",result);
-          localStorage.setItem("token", JSON.stringify(result.data.token));
-          localStorage.setItem("expiresIn", JSON.stringify(result.data.expires_in));
-
-          getSubscriberList()
-      },
-      (error) => {
-          console.log("error at oauth",error);
-          setError(true)
-      }
-    );
-  }
+  const navigation = useHistory();
 
   const getSubscriberList = () => {
-    let extensionId = "4xbv0wcmq7w91n66b3bh417irlsja1"
+    let extensionId = process.env.REACT_APP_EXTENSION_ID
 
     let token = localStorage.getItem("token");
 
     console.log("token",token);
 
     if(!token){
-      setError(true);
+      navigation.push("./error");
     }else{
   
       axios.get("http://localhost:5000/broadcaster/list/",
@@ -51,8 +34,8 @@ function IndexComponent() {
         },
         (error) => {
             console.log("error at get broadcasters",error);
-            setError(true);
             setShowTableData(false);
+            navigation.push("./error");
         }
       );
     }
@@ -67,10 +50,10 @@ function IndexComponent() {
     console.log("token",token);
 
     if(!token){
-      setError(true);
+      navigation.push("./error");
     }else{
         console.log("selected name", name)
-      axios.get("http://localhost:5000/broadcaster/url",
+        axios.get("http://localhost:5000/broadcaster/url",
       { params: { "name" : name }, headers: { Authorization: token }  }).then(
         (response) => {
             let result = response.data;
@@ -89,7 +72,7 @@ function IndexComponent() {
  
   useEffect(() => {
     console.log("Generating OAuth Token");
-    OAuthToken();
+    getSubscriberList();
   }, []);
 
   const handleRowClick = async(id,name) => {
@@ -100,8 +83,8 @@ function IndexComponent() {
 
   return (
     <div>
-      {error ? <ErrorComponent /> : null}
-      {showVideoPlayer ? <VideoPlayer url={url}/> : null}
+      {/* {error ? <ErrorComponent /> : null} */}
+      {showVideoPlayer ? <VideoPlayer url={url} name={showBroadcasterName}/> : null}
       {showTableData ? 
         <div className="container" style={{marginTop: "20px"}}>
             <h1>List Of Subscribers: </h1>

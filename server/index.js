@@ -10,10 +10,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cors());
 
-const Auth = require('./Auth');
 const Broadcasters = require("./Broadcasters")
 
-app.use('/auth/',Auth); //Auth file where OAuth token is generated
 app.use('/broadcaster/',Broadcasters);
 
 app.listen(parseInt(process.env.APPPORT), () => {

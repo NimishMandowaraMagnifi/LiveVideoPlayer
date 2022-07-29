@@ -14,7 +14,7 @@ main {
 	display: grid;
 	grid-gap: 1.5em;
 	grid-template-columns: 1fr 1fr 1fr;
-	grid-template-rows: 0.2fr 1fr;
+	grid-template-rows: 0.2fr;
 	grid-template-areas: "video video aside" "section section aside";
 }
 
@@ -138,6 +138,10 @@ aside {
 .aside__more a {
 	text-decoration: none;
 	color: gray;
+}
+
+img {
+	padding-bottom: 10px;
 }
 
 @media only screen and (max-width: 1002px) {
